@@ -228,12 +228,6 @@ WRK02 must NOT be domain joined to corp.local. It is a pure Entra ID joined devi
 - Gateway: 192.168.10.1
 - DNS: 8.8.8.8
 
-**Create local admin fallback account before enrolment:**
-```powershell
-net user localadmin Password123! /add
-net localgroup administrators localadmin /add
-```
-
 **Take a Hyper-V checkpoint before enrolment** - revert to this if enrolment fails rather than retrying on a corrupted state.
 
 **Entra ID join:**
