@@ -88,6 +88,16 @@ Always verify member count after saving. An empty group silently fails - any pol
 
 **NOTE:** Configuration and compliance needs revisiting. We set this up without looking too much into it for the sake of building the homelab and getting drills up and running ASAP.
 
+**Setting MDM authority - Critical First Step**
+
+Before configuring anything else in Intune, the MDM authority must be explicitly set to Microsoft Intune. This is a one-time tenant-level setting that tells the service it is responsible for device management. If this is not set, every enrolment attempt will fail silently or with a generic authorisation error - this was the root cause of all enrolment failures during initial lab setup.
+ 
+Navigate directly to:
+ 
+`https://intune.microsoft.com/#view/Microsoft_Intune_Enrollment/ChooseMDMAuthorityBlade`
+ 
+Select **Microsoft Intune** and confirm. The Tenant Status page under Tenant Administration should now show MDM Authority as **Microsoft Intune** rather than Unknown.
+
 **Automatic MDM Enrolment**
 
 Navigate to `entra.microsoft.com` → Mobility (MDM and WIP) → Microsoft Intune.
@@ -247,3 +257,8 @@ Run `dsregcmd /status` and confirm:
 
 Then check `intune.microsoft.com` → Devices → All devices - WRK02 should appear within 5-10 minutes of a successful Entra ID join with MDM URLs populated.
 
+## Setup mistakes we came across:
+
+**MDM authority not set** - the single most critical setup step and the most easily missed. If MDM authority shows as Unknown in Tenant Administration → Tenant Status, no device will ever successfully enrol regardless of any other configuration. Every enrolment attempt returns a generic authorisation error with no clear indication this is the cause. Always set MDM authority to Microsoft Intune immediately after activating the Intune trial using the direct URL: `https://intune.microsoft.com/#view/Microsoft_Intune_Enrollment/ChooseMDMAuthorityBlade`
+ 
+**Device not appearing in Intune after enrolment** - the enrolled user must sign into Windows on the device to trigger the Intune registration. Signing in as a local admin or a different account after Entra ID join is not sufficient. The primary user (the account used to join Entra ID) must sign in for the device to appear in Intune.
